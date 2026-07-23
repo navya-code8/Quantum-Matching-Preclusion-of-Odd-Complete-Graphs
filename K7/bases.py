@@ -30,6 +30,11 @@ v19 = norm(np.array([w**2, w, 1, 0, 0, 1],dtype=complex))
 v20 = norm(np.array([w, w**2, 1, 0, 1, 0],dtype=complex))
 v21 = norm(np.array([1, 1, 1, 1, 0, 0]))
 
+vectors = [v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21]
+
+
+
+
 #bases
 B1 = np.array([v1,v2,v3,v4,v5,v6])
 B2 = np.array([v1,v7,v8,v9,v10,v11])
@@ -38,6 +43,8 @@ B4 = np.array([v3,v8,v12,v16,v17,v18])
 B5 = np.array([v4, v9, v13, v16, v19, v20])
 B6 = np.array([v5, v10, v14, v17, v19, v21])
 B7 = np.array([v6, v11, v15, v18, v20, v21])
+
+bases = [B1, B2, B3, B4, B5, B6, B7];
 
 #projectors
 def p(v):
@@ -63,3 +70,54 @@ P18 = p(v18)
 P19 = p(v19)
 P20 = p(v20)
 P21 = p(v21)
+
+projectors = [P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21]
+
+#checks
+#all normalized
+
+"""
+for i in range(21):
+  print(np.isclose(np.linalg.norm(vectors[i]), 1))
+"""
+#check orthonomal bases
+"""
+for k in range(7):
+
+  basis = bases[k]
+  for i in range(6):
+    for j in range(6):
+        if i == j:
+          print(np.isclose(np.vdot(basis[i], basis[j]), 1))
+        else:
+          print(np.isclose(np.vdot(basis[i], basis[j]), 0))
+"""
+
+#projectors should satisfy P^2=P
+"""
+for i in range(21):
+  print(np.isclose(projectors[i] @ projectors[i], projectors[i]))
+"""
+
+#projects should be hermitian
+"""
+for i in range(21):
+  print(np.isclose(projectors[i].conj().T, projectors[i]))
+"""
+
+#projectors should be rank=1
+"""
+for i in range(21):
+  print(np.linalg.matrix_rank(projectors[i]))
+"""
+
+#for each vertex the projectors connected to it should add to the identity
+"""
+print(np.isclose(P1+P2+P3+P4+P5+P6, np.identity(6)))
+print(np.isclose(P1+P7+P8+P9+P10+P11, np.identity(6)))
+print(np.isclose(P2+P7+P12+P13+P14+P15, np.identity(6)))
+print(np.isclose(P3+P8+P12+P16+P17+P18, np.identity(6)))
+print(np.isclose(P4+P9+P13+P16+P19+P20, np.identity(6)))
+print(np.isclose(P5+P10+P14+P17+P19+P21, np.identity(6)))
+print(np.isclose(P6+P11+P15+P18+P20+P21, np.identity(6)))
+"""
