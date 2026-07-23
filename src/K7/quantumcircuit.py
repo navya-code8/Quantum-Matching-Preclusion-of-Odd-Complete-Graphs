@@ -1,10 +1,11 @@
 import numpy as np
 import qiskit
 from qiskit import QuantumCircuit
-from qiskit import UnitaryGate
-#not needed in vs code but needed here
-from src.bases import bases
-from src.verifier import vertex_edges
+from qiskit.circuit.library import UnitaryGate
+from qiskit.providers.basic_provider import BasicSimulator
+
+from bases import bases
+from verifier import vertex_edges
 
 
 #create the 7 8x8 matrices
@@ -52,61 +53,6 @@ def game_circuit(a, b):
   circuit.append(bgate, [3,4,5])
 
   circuit.measure_all()
-  import numpy as np
-import qiskit
-from qiskit import QuantumCircuit
-from qiskit import UnitaryGate
-from qiskit import BasicSimulator
-
-#not needed in vs code but needed here
-v1 = norm(np.array([1,0,0,0,0,0]))
-v2 = norm(np.array([0,1,0,0,0,0]))
-v3 = norm(np.array([0,0,1,0,0,0]))
-v4 = norm(np.array([0,0,0,1,0,0]))
-v5 = norm(np.array([0,0,0,0,1,0]))
-v6 = norm(np.array([0,0,0,0,0,1]))
-v7 = norm(np.array([0,0,1,1,1,1]))
-v8 = norm(np.array([0,1,0,1,w,w**2],dtype=complex))
-v9 = norm(np.array([0,1,1,0,w**2,w],dtype=complex))
-v10 = norm(np.array([0,1,w,w**2,0,1],dtype=complex))
-v11 = norm(np.array([0, 1, w**2, w, 1, 0],dtype=complex))
-v12 = norm(np.array([1, 0, 0, 1, w**2, w],dtype=complex))
-v13 = norm(np.array([1, 0, 1, 0, w, w**2],dtype=complex))
-v14 = norm(np.array([1, 0, w**2, w, 0, 1],dtype=complex))
-v15 = norm(np.array([1, 0, w, w**2, 1, 0],dtype=complex))
-v16 = norm(np.array([1, 1, 0, 0, 1, 1]))
-v17 = norm(np.array([w, w**2, 0, 1, 0, 1],dtype=complex))
-v18 = norm(np.array([w**2, w, 0, 1, 1, 0],dtype=complex))
-v19 = norm(np.array([w**2, w, 1, 0, 0, 1],dtype=complex))
-v20 = norm(np.array([w, w**2, 1, 0, 1, 0],dtype=complex))
-v21 = norm(np.array([1, 1, 1, 1, 0, 0]))
-
-#bases
-B1 = np.array([v1,v2,v3,v4,v5,v6])
-B2 = np.array([v1,v7,v8,v9,v10,v11])
-B3 = np.array([v2,v7,v12,v13,v14,v15])
-B4 = np.array([v3,v8,v12,v16,v17,v18])
-B5 = np.array([v4, v9, v13, v16, v19, v20])
-B6 = np.array([v5, v10, v14, v17, v19, v21])
-B7 = np.array([v6, v11, v15, v18, v20, v21])
-
-bases = [B1, B2, B3, B4, B5, B6, B7]
-
-#all 21 edges
-edges = []
-
-for i in range(1,8):
-  for j in range(i+1, 8):
-    edges.append((i,j))
-
-#given a vertex i, gives all edges connected to that vertex i
-vertex_edges = []
-for i in range(1,8):
-  vertex_edges[i] = []
-
-  for edge in edges:
-    if i in edge:
-      vertex_edges[i].append[edge]
 
 #create the 7 8x8 matrices
 def matrix(m):
@@ -176,3 +122,4 @@ def game_circuit(a, b):
 
 
 
+game_circuit(1,1)

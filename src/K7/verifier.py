@@ -8,13 +8,13 @@ for i in range(1,8):
     edges.append((i,j))
 
 #given a vertex i, gives all edges connected to that vertex i
-vertex_edges = []
+vertex_edges = {}
 for i in range(1,8):
   vertex_edges[i] = []
 
   for edge in edges:
     if i in edge:
-      vertex_edges[i].append[edge]
+      vertex_edges[i].append(edge)
 
 def game_result(a,b):
   #if they return the same edge, they won
