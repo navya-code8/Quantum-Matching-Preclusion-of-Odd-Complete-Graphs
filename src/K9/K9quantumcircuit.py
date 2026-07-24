@@ -3,6 +3,7 @@ import qiskit
 from qiskit import QuantumCircuit, transpile
 from qiskit.circuit.library import UnitaryGate
 from qiskit.providers.basic_provider import BasicSimulator
+import random
 
 from src.K7.bases import bases
 from src.K7.verifier import vertex_edges, game_result
@@ -27,16 +28,27 @@ def bobstrategy(vertice):
   gate = UnitaryGate(np.conjugate(matrix))
   return gate
 
-#maps the vertices from the K9 graph to the K7 graph
-actual_to_local = {1:1, 3:2, 4:3, 5:4, 6:5, 7:6, 8:7}
-local_to_actual = {1:1, 2:3, 3:4, 4:5, 5:6, 6:7, 7:8}
+#random edge chosen
+removed_edge = random.sample(range(1,10), 2)
 
-#this is the K7 graph
-k7 = [1,3,4,5,6,7,8]
+partner = random.choice([i for i in range(1,10) if i != removed_edge[0] and i != removed_edge[1]])
 
 #predetermined strategy
-fixed = [2,9]
-fixed_edge = (2,9)
+fixed = [removed_edge[0], partner]
+fixed_edge = (removed_edge[0], partner)
+
+#this is the K7 graph
+k7 = [i for i in range(1,10) if i != removed_edge[0] and i != partner]
+
+#maps the vertices from the K9 graph to the K7 graph
+actual_to_local = {}
+local_to_actual = {}
+
+for i in range(7):
+    actual_to_local[k7[i]] = i + 1
+    local_to_actual[i + 1] = k7[i]
+
+
 
 #game_circuit returns a pair and we want a integer
 def e(e):
