@@ -4,8 +4,8 @@ from qiskit import QuantumCircuit, transpile
 from qiskit.circuit.library import UnitaryGate
 from qiskit.providers.basic_provider import BasicSimulator
 
-from bases import bases
-from verifier import vertex_edges, game_result
+from src.K7.bases import bases
+from src.K7.verifier import vertex_edges, game_result
 
 
 #create the 7 8x8 matrices
@@ -69,15 +69,3 @@ def game_circuit(a, b):
   bobedge = vertex_edges[b][bobindex]
 #return the edges that alice and bob input into the game verifier
   return aliceedge, bobedge
-
-
-#testing the algorithm
-
-for alice_vertex in range(1, 8):
-  for bob_vertex in range(1, 8):   
-    print("Alice's vertex:", alice_vertex)
-    print("Bob's vertex:", bob_vertex)
-    alice_edge, bob_edge = game_circuit(alice_vertex, bob_vertex)
-    print("Alice's edge:", alice_edge)
-    print("Bob's edge:", bob_edge)
-    print("Game result:", game_result(alice_edge, bob_edge))
