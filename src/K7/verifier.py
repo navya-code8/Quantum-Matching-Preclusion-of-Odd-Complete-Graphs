@@ -22,7 +22,7 @@ def game_result(a,b):
     return 1
   #if they return disjoint edges, they won (this can't happen if Alice and Bob are given the same vertex)
   if a[0] != b[0] and a[0] != b[1]:
-    if a[1] != b[0] and 1[1] != b[1]:
+    if a[1] != b[0] and a[1] != b[1]:
       return 1
 
   return 0
