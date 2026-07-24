@@ -9,24 +9,6 @@ from src.K7.bases import bases
 from src.K7.verifier import vertex_edges, game_result
 from src.K7.quantumcircuit import game_circuit
 
-#create the 7 8x8 matrices
-def matrix(m):
-  eight_m = np.identity(8, dtype=complex)
-  eight_m[:6, :6] = m
-  return eight_m
-
-bases_eight = [matrix(m) for m in bases]
-
-
-def alicestrategy(vertice):
-  matrix = bases_eight[vertice-1]
-  gate = UnitaryGate(matrix)
-  return gate
-
-def bobstrategy(vertice):
-  matrix = bases_eight[vertice-1]
-  gate = UnitaryGate(np.conjugate(matrix))
-  return gate
 
 #random edge chosen
 removed_edge = random.sample(range(1,10), 2)
