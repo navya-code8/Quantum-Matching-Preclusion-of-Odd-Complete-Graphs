@@ -24,67 +24,67 @@ A perfect classical strategy exists exactly when the graph has a classical perfe
 
 - Pytest 8.4.1
 
-Install the required packages with this command:
+Install the required packages with this command
 
-|                                           |
-|:------------------------------------------|
-| python -m pip install -r requirements.txt |
+                                                |                                           |
+                                                |:------------------------------------------|
+                                                | python -m pip install -r requirements.txt |
 
-Recommendation is to use a virtual environment:
+Recommendation is to use a virtual environment
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr>
-<td style="text-align: left;">python -m venv .venv<br />
-source .venv/bin/activate<br />
-python -pip install -r requirements.txt</td>
-</tr>
-</tbody>
-</table>
+                                                    <table>
+                                                    <colgroup>
+                                                    <col style="width: 100%" />
+                                                    </colgroup>
+                                                    <tbody>
+                                                    <tr>
+                                                    <td style="text-align: left;">python -m venv .venv<br />
+                                                    source .venv/bin/activate<br />
+                                                    python -pip install -r requirements.txt</td>
+                                                    </tr>
+                                                    </tbody>
+                                                    </table>
 
-Virtual environment implementation for Windows:
+Virtual environment implementation for Windows
 
-|                        |
-|:-----------------------|
-| .venv\Scripts\activate |
+                                                        |                        |
+                                                        |:-----------------------|
+                                                        | .venv\Scripts\activate |
 
 ## Usage
 
 ### Run the K_7 Strategy
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr>
-<td style="text-align: left;">from src.K7.quantumcircuit import game_circuit<br />
-from src.K7.verifier import game_result<br />
-<br />
-alice_vertex = 1<br />
-Bob_vertex = 4<br />
-<br />
-Alice_edge, bob_edge = game_circuit(alice_vertex, bob_vertex)<br />
-<br />
-print("Alice:", alice_edge)<br />
-print("Bob:" bob_edge)<br />
-print("winning result:", game_result(alice_edge, bob_edge))</td>
-</tr>
-</tbody>
-</table>
+                                        <table>
+                                        <colgroup>
+                                        <col style="width: 100%" />
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                        <td style="text-align: left;">from src.K7.quantumcircuit import game_circuit<br />
+                                        from src.K7.verifier import game_result<br />
+                                        <br />
+                                        alice_vertex = 1<br />
+                                        Bob_vertex = 4<br />
+                                        <br />
+                                        Alice_edge, bob_edge = game_circuit(alice_vertex, bob_vertex)<br />
+                                        <br />
+                                        print("Alice:", alice_edge)<br />
+                                        print("Bob:" bob_edge)<br />
+                                        print("winning result:", game_result(alice_edge, bob_edge))</td>
+                                        </tr>
+                                        </tbody>
+                                        </table>
 
 The circuit returns one sampled edge for Alice and one sampled edge for Bob.
 
 ### Run the tests
 
-Run this in the repository root:
+Run this in the repository root
 
-|           |
-|:----------|
-| pytest -q |
+                                                                    |           |
+                                                                    |:----------|
+                                                                    | pytest -q |
 
 ### Extension experiments execution
 
@@ -107,19 +107,19 @@ Each script grades its strategy over the selected Alice and Bob question pairs a
 
 ### $`K_{7}`$ Vectors and Bases
 
-The 21 edges of $`K_{7}\`$are displayed by 21 normalized vectors in $`\backslash mathbb\{ C\}\hat{}6`$. For each graph vertex, the six vectors are associated with their incident edges that form an orthonormal basis.
+The 21 edges of $`K_{7}\`$ are displayed by 21 normalized vectors in $\mathbb{C}^6$. For each graph vertex, the six vectors are associated with their incident edges that form an orthonormal basis.
 
 If $`B_{x}`$ is the basis for vertex $`x`$, then
 
-$`B_{x}{B^{\dagger}}_{x}\  = \ I_{6}`$
+                                                $`B_{x}{B^{\dagger}}_{x}\  = \ I_{6}`$
 
 Definition for a rank-one projector is given by its corresponding normalized vector $`v_{e}`$
 
-$`P_{e}\  = \ |v_{e} > < v_{e}|`$
+                                                    $`P_{e}\  = \ |v_{e} > < v_{e}|`$
 
 The projectors for the six edges incident to each vertex satisfy:
 
-sum($`P_{e}`$ for the e incident to x) = $`I_{6}`$
+                                            sum($`P_{e}`$ for the e incident to x) = $`I_{6}`$
 
 Projections with distinct overlapping edges are orthogonal.
 
@@ -127,7 +127,7 @@ Projections with distinct overlapping edges are orthogonal.
 
 The mathematical construction uses a six-dimensional Hilbert space. Since a qubit register must have dimension $`2^{n}`$, the implementation turns the six-dimensional vectors into an eight-dimension three-qubit space
 
-$`(a0,\ a1,\ a2,\ a3,\ a4,\ a5) - > (a0,\ a1,\ a2,\ a3,\ a4,\ a5,0,0)`$
+                                  $`(a0,\ a1,\ a2,\ a3,\ a4,\ a5) - > (a0,\ a1,\ a2,\ a3,\ a4,\ a5,0,0)`$
 
 Alice and Bob each use three qubits which gives a six-qubit circuit in total.
 
