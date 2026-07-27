@@ -102,6 +102,8 @@ def find_symmetries(graph_edges):
 #renames the pattern using every graph symmetry
 def recognition(pattern, graph_edges, symmetries):
     ordered_edges = sorted(graph_edges)
+    smallest_signature = None
+
     for i in symmetries:
 
         moved_pattern = {}
@@ -126,7 +128,6 @@ def recognition(pattern, graph_edges, symmetries):
 
         #we want the smallest possible one
 
-        smallest_signature = None
 
         if smallest_signature is None:
             smallest_signature = recognition1
@@ -174,6 +175,7 @@ if __name__ == "__main__":
 
     graph_edges = subgraph([(0,1)])
 
+    
     patterns = find_rank_pattern(graph_edges, dimension=6, max=100)
 
     unique_patterns = remove_equivlant_patterns(patterns, graph_edges)
@@ -186,6 +188,8 @@ if __name__ == "__main__":
         for current_edge, rank in pattern.items():
             if rank >0:
                 print(current_edge, "rank", rank)
+
+        
 
 
 

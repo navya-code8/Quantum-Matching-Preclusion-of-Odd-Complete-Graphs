@@ -6,7 +6,7 @@ vertices = [0,1,2,3,4,5,6,7,8]
 
 #given two vertices, we can make an edge.
 def edge(u,v):
-    return tuple[(u,v)] if u < v else tuple[(v,u)]
+    return (u,v) if u < v else (v,u)
 
 #the complete graph K9
 K9_edges = []
@@ -17,16 +17,18 @@ for u in vertices:
 
 #we want subgraphs
 def subgraph(deleted_edges):
-    deleted = []
+    deleted = set()
     for u,v in deleted_edges:
-        deleted.append(edge(u,v))
+        deleted.add(edge(u,v))
 
     subgraph = []
 
     #generate the edges without the deleted ones
-    for edges in K9_edges:
-        if edges not in deleted:
-            subgraph.append(edges)
+    for u,v in K9_edges:
+        current_edge = edge(u,v)
+
+        if current_edge not in deleted:
+            subgraph.append(current_edge)
     return subgraph
 
 #we also define a function which returns all edges incident to a vertex.
