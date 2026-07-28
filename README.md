@@ -153,9 +153,20 @@ Based on the candidate ranks, we implement projectors and random basis for the g
 
 We then adjust the angles of the basis to align projectors for every vertex. Then, we will test these adjusted projectors and test the quantum strategy.
 
-## Current Limitations
+## Challenges
+The biggest challenge was the comprehension and application of graph theory alongside the intersection of quantum presented in the paper. Furthermore, we also had to translate projector constructions into measurement bases, and quantum operations.
 
-## Testing Improvements
+## Current Limitations
+A primary limitation of this project was the subgraph-implemention. The development of an efficent method for identifying and removing all isomorphic copies of each subgraph was not achieved. 
+
+Additionally, the search was contained to only real orthogonal bases, while some quantum strategies still require complex-valued bases. 
+
+The numerical optimizer can discover promising solutions, but not being able to find a solution doesn't mean that a quantum strategy is impossible.
+
+Futhermore, computational time also restriced the number of rank patterns, initial conditions and optimization attempts that could be evaluate for each subgraph.
+
+## Next Steps
+Knowing the extension to which the subgraph quantum algorithm can be tested on is the next milestone. So far, implementation from the algorithm happened on subgraphs of K9. Application of similar frameworks to search subgraphs of K_n randomly is the next goal in several candidate dimensions
 
 ## References
 
