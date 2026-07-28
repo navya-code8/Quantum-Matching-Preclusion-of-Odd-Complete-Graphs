@@ -1,6 +1,6 @@
 #we want to find many solutions (integers) for a lot of rank equations. we use the CP-SAT solver from google
 from ortools.sat.python import cp_model
-from graphs import vertices, edge, incident_edges, K9_edges
+from src.K9.subgraphs_algorithm.graphs import vertices, edge, incident_edges, K9_edges
 #import permutations to eliminate the equivalant rank patterns
 from itertools import permutations, combinations
 
@@ -37,13 +37,8 @@ def find_rank_pattern(graph_edges, dimension, max):
         edge_ac = edge(a, c)
         edge_bc = edge(b, c)
 
-        # Only add the constraint if all three triangle edges
-        # are present in the current subgraph.
-        if (
-            edge_ab in rank_variables
-            and edge_ac in rank_variables
-            and edge_bc in rank_variables
-        ):
+        # only add the constraint if all three triangle edges are present in the current subgraph.
+        if (edge_ab in rank_variables and edge_ac in rank_variables and edge_bc in rank_variables):
             model.add(
                 rank_variables[edge_ab]
                 + rank_variables[edge_ac]

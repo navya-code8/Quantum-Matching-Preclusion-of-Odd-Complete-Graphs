@@ -1,6 +1,6 @@
 import numpy as np
-from graphs import incident_edges, subgraph
-from rank_search import find_rank_pattern, remove_equivlant_patterns
+from src.K9.subgraphs_algorithm.graphs import incident_edges, subgraph
+from src.K9.subgraphs_algorithm.rank_search import find_rank_pattern, remove_equivlant_patterns
 #this is for the optimization
 from scipy.optimize import minimize
 #from a 
@@ -266,6 +266,6 @@ if __name__ == "__main__":
 
     result = projectors(dimension=6, pattern=pattern, graph_edges=graph_edges, attempts=1, max_iterations=50)
 
-    print("Loss is:", result["loss"])
+    print("Loss is:", result["bases"])
 
-        
+    
