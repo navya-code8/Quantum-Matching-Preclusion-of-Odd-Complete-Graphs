@@ -204,9 +204,11 @@ def projectors(dimension, pattern, graph_edges, attempts=5, max_iterations=500):
 
     for attempt in range(attempts):
 
+        #randomize the angles
         starting_angles = np.random.uniform(-np.pi, np.pi, 8*dimension*(dimension-1)//2)
 
 
+        #use scipy for this
         result = minimize(
             calculate_error,
             starting_angles,
@@ -221,11 +223,14 @@ def projectors(dimension, pattern, graph_edges, attempts=5, max_iterations=500):
             }
         )
 
+        #bookkeeping
         print(
             f"Attempt {attempt+1}/{attempts}: "
             f"loss = {result.fun}"
         )
 
+
+        #we want the best result
         if best_result is None or result.fun < best_result.fun:
             best_result = result
 
@@ -235,6 +240,8 @@ def projectors(dimension, pattern, graph_edges, attempts=5, max_iterations=500):
 
     best_projectors = makeprojectors(best_bases, routing, graph_edges)
 
+
+    #return all bases/projectors/angles associated with the best result
     return {
         "loss": float(best_result.fun),
         "angles": best_angles,
@@ -244,5 +251,21 @@ def projectors(dimension, pattern, graph_edges, attempts=5, max_iterations=500):
 
     }
 
+#graph_edges 
 
+if __name__ == "__main__":
 
+    graph_edges = subgraph([(0,1), (0,2), (0,3), (1,3), (2,3), (3,4)])
+
+    
+    patterns = find_rank_pattern(graph_edges, dimension=6, max=100)
+
+    unique_patterns = remove_equivlant_patterns(patterns, graph_edges)
+
+    pattern = unique_patterns[0]
+
+    result = projectors(dimension=6, pattern=pattern, graph_edges=graph_edges, attempts=1, max_iterations=50)
+
+    print("Loss is:", result["loss"])
+
+        
