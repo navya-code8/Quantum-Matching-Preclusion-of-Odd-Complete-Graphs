@@ -131,9 +131,11 @@ $`(a0,\ a1,\ a2,\ a3,\ a4,\ a5) - > (a0,\ a1,\ a2,\ a3,\ a4,\ a5,0,0)`$
 
 Alice and Bob each use three qubits which gives a six-qubit circuit in total.
 
-## Larger Odd complete graphs
+## Extensions 
 
-For odd $`n \geq 9`$, the strategy splits the graph into:
+### Odd subgraphs of complete graphs
+
+For odd $`n \geq 9`$, we constructed a generalizable perfect quantum algorithm for $K_{n}-e$. To do this, the strategy splits the graph into:
 
 - A seven-vertex subgraph using the $`K_{7}`$ quantum strategy
 
@@ -141,10 +143,27 @@ For odd $`n \geq 9`$, the strategy splits the graph into:
 
 This trails the construction used to extend the $`K_{7}`$ result in larger odd complete graphs.
 
+### Generalizable Adaptive Algorithm using Dual Phase Optimization
+
+We then implement a generalized algorithm for all possible subgraphs of $K_{9}$. To do this, we first construct all possible subgraphs, accounting for isomorphisms.
+
+Then, we enumerate through many different integer rank values satisfying rank restrictions based on the graph. We account for equivalent patterns by testing all valid permutations of the said subgraph. We assume a fixed dimension of eight.
+
+Based on the candidate ranks, we implement projectors and random basis for the graph. 
+
+We then adjust the angles of the basis to align projectors for every vertex. Then, we will test these adjusted projectors and test the quantum strategy.
+
 ## Current Limitations
 
 ## Testing Improvements
 
-## Reference(s)
+## References
 
-> Cui, D., Mančinska, L., Nezhadi, S. S., & Roberson, D. E. (2025). Quantum Perfect Matchings. *Annales Henri Poincaré*. https://doi.org/10.1007/s00023-025-01632-5
+* Cui, D., Mančinska, L., Nezhadi, S. S., & Roberson, D. E. (2025). “Quantum Perfect Matchings.” *Annales Henri Poincaré*. https://doi.org/10.1007/s00023-025-01632-5
+
+* Furches, J., Chehade, S., Hamilton, K., Wiebe, N., & Ortiz Marrero, C. (2023). “Application-Level Benchmarking of Quantum Computers Using Nonlocal Game Strategies.” *arXiv*. https://doi.org/10.48550/arXiv.2311.01363
+
+* Lisoněk, P., Badziąg, P., Portillo, J. R., & Cabello, A. (2014). “Kochen–Specker Set with Seven Contexts.” *Physical Review A, 89*(4), 042101. https://doi.org/10.1103/PhysRevA.89.042101
+
+
+
