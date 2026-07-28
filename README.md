@@ -107,7 +107,7 @@ Each script grades its strategy over the selected Alice and Bob question pairs a
 
 ### $`K_{7}`$ Vectors and Bases
 
-The 21 edges of $`K_{7}\`$are displayed by 21 normalized vectors in $`\backslash mathbb\{ C\}\hat{}6`$. For each graph vertex, the six vectors are associated with their incident edges that form an orthonormal basis.
+The 21 edges of $`K_{7}\`$ are displayed by 21 normalized vectors in $\mathbb{C}^6$. For each graph vertex, the six vectors are associated with their incident edges that form an orthonormal basis.
 
 If $`B_{x}`$ is the basis for vertex $`x`$, then
 
