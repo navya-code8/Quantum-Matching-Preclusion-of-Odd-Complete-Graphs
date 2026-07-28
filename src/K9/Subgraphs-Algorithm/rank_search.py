@@ -2,7 +2,7 @@
 from ortools.sat.python import cp_model
 from graphs import vertices, edge, incident_edges, K9_edges
 #import permutations to eliminate the equivalant rank patterns
-from itertools import permutations
+from itertools import permutations, combinations
 
 #finds a rank pattern based on the graph after deletion and the quantum dimension
 def find_rank_pattern(graph_edges, dimension, max):
@@ -31,7 +31,25 @@ def find_rank_pattern(graph_edges, dimension, max):
 
         #create the constraints
         model.add(sum(ranks) == dimension)
+    for a, b, c in combinations(vertices, 3):
 
+        edge_ab = edge(a, b)
+        edge_ac = edge(a, c)
+        edge_bc = edge(b, c)
+
+        # Only add the constraint if all three triangle edges
+        # are present in the current subgraph.
+        if (
+            edge_ab in rank_variables
+            and edge_ac in rank_variables
+            and edge_bc in rank_variables
+        ):
+            model.add(
+                rank_variables[edge_ab]
+                + rank_variables[edge_ac]
+                + rank_variables[edge_bc]
+                <= dimension
+            )
     #edges, variables, in matching order
     edges = list(rank_variables.keys())
     variables = list(rank_variables.values())

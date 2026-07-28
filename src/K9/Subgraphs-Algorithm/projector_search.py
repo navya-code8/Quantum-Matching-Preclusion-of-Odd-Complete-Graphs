@@ -1,5 +1,8 @@
-from numpy import np
-from graphs import incident_edges
+import numpy as np
+from graphs import incident_edges, subgraph
+from rank_search import find_rank_pattern, remove_equivlant_patterns
+#this is for the optimization
+from scipy.optimize import minimize
 #from a 
 
 
@@ -71,6 +74,9 @@ def basis(dimension, angles):
 def build_basis(dimension, allangles):
     #basis 0 is allangles[0] to allangles[27] for dimesion = 8 dimension * dimesion-1)/2
 
+
+    angles_per_basis = dimension * (dimension-1) //2
+    total_angles = 8 * angles_per_basis
     #stores the set of 9 bases
     bases = {}
 
@@ -80,9 +86,9 @@ def build_basis(dimension, allangles):
     for i in range(1,9):
 
         #we want 28 angles per basis
-        startindex = 28*(i-1)
+        startindex = angles_per_basis*(i-1)
 
-        endindex = startindex + 28
+        endindex = startindex + angles_per_basis
 
         #for example, basis 1 should be allangles[0] to allangles[27]
         indexes = allangles[startindex:endindex]
@@ -100,9 +106,9 @@ def decidecolumns(pattern, graph_edges):
     routing = {}
 
     #define the index of the column. goes from 0 to dimension
-    index = 0 
     for i in range(0,9):
         routing[i] = {}
+        index = 0 
 
 
         for edge in incident_edges(i, graph_edges):
@@ -166,7 +172,7 @@ def makeprojectors(bases, routing, graph_edges):
 
 
 #calculate error
-def calculate_error(dimension, allangles, routing, graph_edges):
+def calculate_error(allangles, routing, graph_edges, dimension):
 
     bases = build_basis(dimension, allangles)
 
@@ -191,5 +197,52 @@ def calculate_error(dimension, allangles, routing, graph_edges):
     return (error/len(graph_edges))
 
 #optimizer 
-def projectors(dimension, pattern, graph_edges):
-    asdf
+def projectors(dimension, pattern, graph_edges, attempts=5, max_iterations=500):
+    routing = decidecolumns(pattern, graph_edges)
+
+    best_result = None
+
+    for attempt in range(attempts):
+
+        starting_angles = np.random.uniform(-np.pi, np.pi, 8*dimension*(dimension-1)//2)
+
+
+        result = minimize(
+            calculate_error,
+            starting_angles,
+            args = (
+                routing, 
+                graph_edges,
+                dimension
+            ), 
+            method = "L-BFGS-B",
+            options = {
+                "maxiter": max_iterations
+            }
+        )
+
+        print(
+            f"Attempt {attempt+1}/{attempts}: "
+            f"loss = {result.fun}"
+        )
+
+        if best_result is None or result.fun < best_result.fun:
+            best_result = result
+
+    best_angles = best_result.x
+
+    best_bases = build_basis(dimension, best_angles)
+
+    best_projectors = makeprojectors(best_bases, routing, graph_edges)
+
+    return {
+        "loss": float(best_result.fun),
+        "angles": best_angles,
+        "bases": best_bases,
+        "projectors": best_projectors,
+        "routing": routing
+
+    }
+
+
+
