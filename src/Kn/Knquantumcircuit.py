@@ -76,15 +76,3 @@ def strategy(a,b,x,y,n):
         return find_edge(a), e(local_b)
     else:
         return find_edge(a), find_edge(b)
-
-
-
-
-total = 0
-for alice_vertex in range(1, 14):
-    for bob_vertex in range(1, 14):   
-      alice_edge, bob_edge = strategy(alice_vertex, bob_vertex, 5,8, 13)
-      total = total + game_result(alice_edge, bob_edge)
-
-print(total)
-
