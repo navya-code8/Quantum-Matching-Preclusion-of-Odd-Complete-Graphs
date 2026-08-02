@@ -1,180 +1,290 @@
-Our project implements and tests quantum strategies for the perfect-matching nonlocal game centered in the paper [*<u>Quantum Perfect Matchings</u>*](https://arxiv.org/pdf/2502.05136).
 
-The main focus is the complete graph $`K_{7}`$ as it has an odd number of vertices, so it has no classical perfect matching. However, the paper proves that it has a perfect quantum strategy. This repository implements the corresponding vector, projector, and quantum circuit construction and examines extensions to larger odd complete graphs
+# Quantum Matching Preclusion of Odd Complete Graphs
 
-## Overview
+This repository implements and tests quantum strategies for the
+perfect-matching nonlocal game on:
 
-In this perfect-matching nonlocal game, a verifier sends one graph vertex (question) to Alice and another to Bob. Each player responds and returns an edge (answer). Their answers are valid when:
+- the complete graph $K_7$; and
+- $K_n-e$ for odd $n\geq 9$, where one edge has been deleted.
 
-1.  The edge that the player returns is incident corresponding to the vertex they received.
+The project accompanies our work on **quantum matching preclusion**, which
+studies how many edge failures a quantum perfect-matching strategy can
+tolerate. The implementation is based on the projector construction in
+[Quantum Perfect Matchings](https://doi.org/10.1007/s00023-025-01632-5).
 
-2.  The edges that the players return are either identical or disjoint.
+## The perfect-matching nonlocal game
 
-A perfect classical strategy exists exactly when the graph has a classical perfect matching possible. The $`K_{7}`$ construction instead uses shared entanglement and quantum measurements to win the game perfectly for odd-number graphs without producing an ordinary classical matching.
+A verifier sends Alice a vertex $a$ and Bob a vertex $b$ from the same graph.
+Each player must return an edge incident with the vertex they received. They
+win when:
 
-## Requirements
+1. Alice's edge is incident with $a$ and Bob's edge is incident with $b$; and
+2. their returned edges are either identical or vertex-disjoint.
 
-- Python 3.10 or later
+A perfect classical strategy exists exactly when the graph has an ordinary
+perfect matching. Since $K_7$ has an odd number of vertices, it has no
+classical perfect matching. Nevertheless, shared entanglement allows Alice and
+Bob to win the game perfectly.
 
-- Qiskit 2.20
+## Implemented strategies
 
-- NumPy 2.3.1
+### The $K_7$ quantum strategy
 
-- Matplotlib 3.10.3
+The 21 edges of $K_7$ are represented by 21 vectors in $\mathbb C^6$. For
+each vertex, the six vectors corresponding to its incident edges form an
+orthonormal basis. If $v_e$ is the normalized vector assigned to edge $e$,
+then its rank-one projector is
 
-- Pytest 8.4.1
+$$
+P_e=\lvert v_e\rangle\langle v_e\rvert.
+$$
 
-Install the required packages with this command:
+At every vertex $x$, the incident projectors satisfy
 
-|                                           |
-|:------------------------------------------|
-| python -m pip install -r requirements.txt |
+$$
+\sum_{e\ni x}P_e=I_6.
+$$
 
-Recommendation is to use a virtual environment:
+Projectors corresponding to distinct intersecting edges are orthogonal. These
+relations are exactly the conditions needed for a perfect quantum strategy.
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr>
-<td style="text-align: left;">python -m venv .venv<br />
-source .venv/bin/activate<br />
-python -pip install -r requirements.txt</td>
-</tr>
-</tbody>
-</table>
+#### Six-qubit circuit
 
-Virtual environment implementation for Windows:
+Alice and Bob each use three qubits, for a total of six qubits. The circuit
+prepares the maximally entangled state
 
-|                        |
-|:-----------------------|
-| .venv\Scripts\activate |
+$$
+\lvert\Phi_6\rangle
+=\frac{1}{\sqrt6}\sum_{j=0}^{5}
+\lvert j\rangle_A\lvert j\rangle_B.
+$$
+
+In the computational basis, this is
+
+$$
+\frac{1}{\sqrt6}\big(
+\lvert000000\rangle+\lvert001001\rangle+
+\lvert010010\rangle+\lvert011011\rangle+
+\lvert100100\rangle+\lvert101101\rangle
+\big).
+$$
+
+The mathematical measurement bases are $6\times6$ matrices. Because three
+qubits span an eight-dimensional space, each matrix is embedded into an
+$8\times8$ unitary by adding an identity block on the two unused dimensions:
+
+$$
+\widetilde U_x=U_x\oplus I_2.
+$$
+
+After receiving their vertices, Alice and Bob apply the appropriate
+vertex-dependent basis gates. Bob uses the conjugate basis required by the
+maximally entangled strategy. They then measure their three-qubit registers.
+Outcomes $0,\ldots,5$ are mapped to the six edges incident with the
+corresponding input vertex.
+
+The unused outcomes $6$ and $7$ have zero probability in the ideal
+construction.
+
+### The $K_n-e$ strategy
+
+For every odd $n\geq9$, the repository implements a perfect quantum strategy
+for $K_n-e$, where $e=xy$ is the deleted edge.
+
+The strategy divides the graph into two components:
+
+1. a seven-vertex quantum core using the $K_7$ strategy; and
+2. deterministic matched pairs on the remaining $n-7$ vertices.
+
+The algorithm selects seven vertices containing exactly one endpoint of the
+deleted edge. Therefore, the missing edge does not occur inside the $K_7$
+core. Since $n-7$ is even, all remaining vertices can be paired.
+
+If a player receives a vertex in the quantum core, the program runs the
+corresponding $K_7$ measurement. If the received vertex is outside the core,
+the player returns its predetermined pairing edge. An edge returned from the
+quantum core is disjoint from every deterministic pairing edge, so the
+combined strategy wins perfectly.
+
+The quantum component always uses the same six-qubit circuit, independently of
+$n$. Increasing $n$ requires only classical vertex selection, relabeling, and
+pairing.
+
+## Repository structure
+
+```text
+.
+â”œâ”€â”€ src/
+â”‚   â”œâ”€â”€ K7/
+â”‚   â”‚   â”œâ”€â”€ __init__.py
+â”‚   â”‚   â”œâ”€â”€ bases.py
+â”‚   â”‚   â”œâ”€â”€ quantumcircuit.py
+â”‚   â”‚   â””â”€â”€ verifier.py
+â”‚   â””â”€â”€ Kn/
+â”‚       â””â”€â”€ Knquantumcircuit.py
+â”œâ”€â”€ tests/
+â”‚   â”œâ”€â”€ test_K7.py
+â”‚   â””â”€â”€ test_Kn_minus_e.py
+â”œâ”€â”€ requirements.txt
+â””â”€â”€ README.md
+```
+
+The main files are:
+
+- **`src/K7/bases.py`**: the seven measurement bases for the $K_7$
+  construction;
+- **`src/K7/quantumcircuit.py`**: preparation, measurement, simulation, and
+  decoding for the six-qubit circuit;
+- **`src/K7/verifier.py`**: graph edges, incident-edge lists, and the game
+  verifier;
+- **`src/Kn/Knquantumcircuit.py`**: the general $K_n-e$ core-and-pairs
+  strategy;
+- **`tests/test_K7.py`**: tests of all ordered $K_7$ verifier inputs; and
+- **`tests/test_Kn_minus_e.py`**: tests of the $K_n-e$ construction.
+
+## Installation
+
+Python 3.10 or later is recommended.
+
+Clone the repository:
+
+```bash
+git clone https://github.com/navya-code8/Quantum-Matching-Preclusion-of-Odd-Complete-Graphs.git
+cd Quantum-Matching-Preclusion-of-Odd-Complete-Graphs
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate it on macOS or Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Activate it on Windows:
+
+```powershell
+.venv\Scripts\activate
+```
+
+Install the dependencies:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+The main dependencies are Qiskit, NumPy, and Pytest.
 
 ## Usage
 
-### Run the K_7 Strategy
+### Run the $K_7$ strategy
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr>
-<td style="text-align: left;">from src.K7.quantumcircuit import game_circuit<br />
-from src.K7.verifier import game_result<br />
-<br />
-alice_vertex = 1<br />
-Bob_vertex = 4<br />
-<br />
-Alice_edge, bob_edge = game_circuit(alice_vertex, bob_vertex)<br />
-<br />
-print("Alice:", alice_edge)<br />
-print("Bob:" bob_edge)<br />
-print("winning result:", game_result(alice_edge, bob_edge))</td>
-</tr>
-</tbody>
-</table>
+```python
+from src.K7.quantumcircuit import game_circuit
+from src.K7.verifier import game_result
+
+alice_vertex = 1
+bob_vertex = 4
+
+alice_edge, bob_edge = game_circuit(alice_vertex, bob_vertex)
+
+print("Alice:", alice_edge)
+print("Bob:", bob_edge)
+print("Win:", bool(game_result(alice_edge, bob_edge)))
+```
 
 The circuit returns one sampled edge for Alice and one sampled edge for Bob.
 
-### Run the tests
+### Run the $K_n-e$ strategy
 
-Run this in the repository root:
+```python
+from src.Kn.Knquantumcircuit import strategy
+from src.K7.verifier import game_result
 
-|           |
-|:----------|
-| pytest -q |
+n = 11
+deleted_edge = (1, 2)
+alice_vertex = 3
+bob_vertex = 8
 
-### Extension experiments execution
+alice_edge, bob_edge = strategy(
+    alice_vertex,
+    bob_vertex,
+    deleted_edge[0],
+    deleted_edge[1],
+    n,
+)
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr>
-<td style="text-align: left;">python K9quantumcircuit.py<br />
-python K9_2quantumcircuit.py<br />
-python K_nquantumcircuit.py</td>
-</tr>
-</tbody>
-</table>
+print("Alice:", alice_edge)
+print("Bob:", bob_edge)
+print("Win:", bool(game_result(alice_edge, bob_edge)))
+```
 
-Each script grades its strategy over the selected Alice and Bob question pairs and prints the total number of accepted outcomes.
+The arguments of `strategy(a, b, x, y, n)` are:
 
-## Mathematical Construction
+- `a`: Alice's input vertex;
+- `b`: Bob's input vertex;
+- `x, y`: the endpoints of the deleted edge; and
+- `n`: an odd integer at least 9.
 
-### $`K_{7}`$ Vectors and Bases
+## Running the tests
 
-The 21 edges of $`K_{7}`$ are displayed by 21 normalized vectors in $\mathbb{C}^6$. For each graph vertex, the six vectors are associated with their incident edges that form an orthonormal basis.
+Run all tests from the repository root:
 
-If $`B_{x}`$ is the basis for vertex $`x`$, then
+```bash
+python -m pytest -q
+```
 
-$`B_{x}{B^{\dagger}}_{x}\  = \ I_{6}`$
+The tests iterate over every ordered pair of verifier questions for:
 
-Definition for a rank-one projector is given by its corresponding normalized vector $`v_{e}`$
+- the $K_7$ circuit; and
+- representative $K_n-e$ instances with $n=9,11,13$.
 
-$`P_{e}\  = \ |v_{e} > < v_{e}|`$
+The current circuit uses one simulator shot for each input pair. These tests
+therefore confirm that the sampled outputs satisfy the verifier, but they do
+not compute the complete output distribution. The exact correctness of the
+strategy follows from the vector and projector identities.
 
-The projectors for the six edges incident to each vertex satisfy:
+## Current limitations
 
-sum($`P_{e}`$ for the e incident to x) = $`I_{6}`$
+- The circuits run on Qiskit's ideal `BasicSimulator` rather than quantum
+  hardware.
+- Each test uses one sampled outcome per verifier input.
+- The current $K_n-e$ test uses a representative deleted edge instead of
+  iterating over all possible deleted edges.
+- The implementation covers the $K_7$ and single-edge $K_n-e$ constructions,
+  not every failure pattern studied in the accompanying paper.
+- Circuit-depth and gate-count estimates are not yet included.
 
-Projections with distinct overlapping edges are orthogonal.
+## Possible improvements
 
-## Qubit Embedding
-
-The mathematical construction uses a six-dimensional Hilbert space. Since a qubit register must have dimension $`2^{n}`$, the implementation turns the six-dimensional vectors into an eight-dimension three-qubit space
-
-$`(a0,\ a1,\ a2,\ a3,\ a4,\ a5) - > (a0,\ a1,\ a2,\ a3,\ a4,\ a5,0,0)`$
-
-Alice and Bob each use three qubits which gives a six-qubit circuit in total.
-
-## Extensions 
-
-### Odd subgraphs of complete graphs
-
-For odd $`n \geq 9`$, we constructed a generalizable perfect quantum algorithm for $K_{n}-e$. To do this, the strategy splits the graph into:
-
-- A seven-vertex subgraph using the $`K_{7}`$ quantum strategy
-
-- An even number of remaining vertices paired with fixed classical edges
-
-This trails the construction used to extend the $`K_{7}`$ result in larger odd complete graphs.
-
-### Generalizable Adaptive Algorithm using Dual Phase Optimization
-
-We then implement a generalized algorithm for all possible subgraphs of $K_{9}$. To do this, we first construct all possible subgraphs, accounting for isomorphisms.
-
-Then, we enumerate through many different integer rank values satisfying rank restrictions based on the graph. We account for equivalent patterns by testing all valid permutations of the said subgraph. We assume a fixed dimension of eight.
-
-Based on the candidate ranks, we implement projectors and random basis for the graph. 
-
-We then adjust the angles of the basis to align projectors for every vertex. Then, we will test these adjusted projectors and test the quantum strategy.
-
-## Challenges
-The biggest challenge was the comprehension and application of graph theory alongside the intersection of quantum presented in the paper. Furthermore, we also had to translate projector constructions into measurement bases, and quantum operations.
-
-## Current Limitations
-A primary limitation of this project was the subgraph-implemention. The development of an efficent method for identifying and removing all isomorphic copies of each subgraph was not achieved. 
-
-Additionally, the search was contained to only real orthogonal bases, while some quantum strategies still require complex-valued bases. 
-
-The numerical optimizer can discover promising solutions, but not being able to find a solution doesn't mean that a quantum strategy is impossible.
-
-Futhermore, computational time also restriced the number of rank patterns, initial conditions and optimization attempts that could be evaluate for each subgraph.
-
-## Next Steps
-Knowing the extension to which the subgraph quantum algorithm can be tested on is the next milestone. So far, implementation from the algorithm happened on subgraphs of K9. Application of similar frameworks to search subgraphs of K_n randomly is the next goal in several candidate dimensions
+- Verify complete statevector output distributions instead of one-shot
+  samples.
+- Test every deleted edge in $K_n-e$.
+- Add fixed simulator seeds for fully reproducible test runs.
+- Record transpiled circuit depth and two-qubit gate counts.
+- Add noisy-simulator or quantum-hardware experiments.
 
 ## References
 
-* Cui, D., Mančinska, L., Nezhadi, S. S., & Roberson, D. E. (2025). “Quantum Perfect Matchings.” *Annales Henri Poincaré*. https://doi.org/10.1007/s00023-025-01632-5
+1. D. Cui, L. ManÄinska, S. S. Nezhadi, and D. E. Roberson,
+   â€œQuantum Perfect Matchings,â€ *Annales Henri PoincarÃ©*, 2025.
+   [doi:10.1007/s00023-025-01632-5](https://doi.org/10.1007/s00023-025-01632-5)
+2. J. Furches, S. Chehade, K. Hamilton, N. Wiebe, and C. Ortiz Marrero,
+   â€œApplication-Level Benchmarking of Quantum Computers Using Nonlocal Game
+   Strategies,â€ 2023.
+   [arXiv:2311.01363](https://doi.org/10.48550/arXiv.2311.01363)
+3. P. LisonÄ›k, P. BadziÄ…g, J. R. Portillo, and A. Cabello,
+   â€œKochen-Specker Set with Seven Contexts,â€ *Physical Review A*, vol. 89,
+   no. 4, 042101, 2014.
+   [doi:10.1103/PhysRevA.89.042101](https://doi.org/10.1103/PhysRevA.89.042101)
 
-* Furches, J., Chehade, S., Hamilton, K., Wiebe, N., & Ortiz Marrero, C. (2023). “Application-Level Benchmarking of Quantum Computers Using Nonlocal Game Strategies.” *arXiv*. https://doi.org/10.48550/arXiv.2311.01363
+## Paper
 
-* Lisoněk, P., Badziąg, P., Portillo, J. R., & Cabello, A. (2014). “Kochen–Specker Set with Seven Contexts.” *Physical Review A, 89*(4), 042101. https://doi.org/10.1103/PhysRevA.89.042101
-
-
-
+The accompanying manuscript is titled **â€œQuantum Matching Preclusion of Odd
+Complete Graphs.â€** Citation information and a public paper link will be added
+when available.
