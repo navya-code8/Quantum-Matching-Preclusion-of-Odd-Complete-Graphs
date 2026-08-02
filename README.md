@@ -114,19 +114,19 @@ pairing.
 
 ```text
 .
-â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ K7/
-â”‚   â”‚   â”œâ”€â”€ __init__.py
-â”‚   â”‚   â”œâ”€â”€ bases.py
-â”‚   â”‚   â”œâ”€â”€ quantumcircuit.py
-â”‚   â”‚   â””â”€â”€ verifier.py
-â”‚   â””â”€â”€ Kn/
-â”‚       â””â”€â”€ Knquantumcircuit.py
-â”œâ”€â”€ tests/
-â”‚   â”œâ”€â”€ test_K7.py
-â”‚   â””â”€â”€ test_Kn_minus_e.py
-â”œâ”€â”€ requirements.txt
-â””â”€â”€ README.md
+├── src/
+│   ├── K7/
+│   │   ├── __init__.py
+│   │   ├── bases.py
+│   │   ├── quantumcircuit.py
+│   │   └── verifier.py
+│   └── Kn/
+│       └── Knquantumcircuit.py
+├── tests/
+│   ├── test_K7.py
+│   └── test_Kn_minus_e.py
+├── requirements.txt
+└── README.md
 ```
 
 The main files are:
