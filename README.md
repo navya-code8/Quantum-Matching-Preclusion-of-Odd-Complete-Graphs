@@ -271,15 +271,14 @@ strategy follows from the vector and projector identities.
 
 ## References
 
-1. D. Cui, L. ManÄinska, S. S. Nezhadi, and D. E. Roberson,
-   â€œQuantum Perfect Matchings,â€ *Annales Henri PoincarÃ©*, 2025.
+1. D. Cui, L. Mančinska, S. S. Nezhadi, and D. E. Roberson,
+   “Quantum Perfect Matchings,” *Annales Henri Poincaré*, 2025.
    [doi:10.1007/s00023-025-01632-5](https://doi.org/10.1007/s00023-025-01632-5)
 2. J. Furches, S. Chehade, K. Hamilton, N. Wiebe, and C. Ortiz Marrero,
-   â€œApplication-Level Benchmarking of Quantum Computers Using Nonlocal Game
-   Strategies,â€ 2023.
+   “Application-Level Benchmarking of Quantum Computers Using Nonlocal Game Strategies,” 2023.
    [arXiv:2311.01363](https://doi.org/10.48550/arXiv.2311.01363)
-3. P. LisonÄ›k, P. BadziÄ…g, J. R. Portillo, and A. Cabello,
-   â€œKochen-Specker Set with Seven Contexts,â€ *Physical Review A*, vol. 89,
+4. P. Lisoněk, P. Badziąg, J. R. Portillo, and A. Cabello,
+   “Kochen-Specker Set with Seven Contexts,” *Physical Review A*, vol. 89,
    no. 4, 042101, 2014.
    [doi:10.1103/PhysRevA.89.042101](https://doi.org/10.1103/PhysRevA.89.042101)
 
